@@ -12,7 +12,7 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
-tf.compat.v1.disable_eager_execution()
+#tf.compat.v1.disable_eager_execution()
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -46,30 +46,36 @@ train_datagen = ImageDataGenerator(rescale = 1./255, shear_range = 0.2, zoom_ran
 
 test_datagen = ImageDataGenerator(rescale = 1./255)
 
-training_set = train_datagen.flow_from_directory('C:/Users/Madhuri/AppData/Local/Programs/Python/Python38/Tomato_Leaf_Disease_Prediction/Dataset/train', # relative path from working directoy
-                                                 target_size = (128, 128),
-                                                 batch_size = 6, class_mode = 'categorical')
-valid_set = test_datagen.flow_from_directory('C:/Users/Madhuri/AppData/Local/Programs/Python/Python38/Tomato_Leaf_Disease_Prediction/Dataset/val', # relative path from working directoy
-                                             target_size = (128, 128), 
-                                        batch_size = 3, class_mode = 'categorical')
+training_set = train_datagen.flow_from_directory('C:/Users/tejes/OneDrive/Desktop/Buddi/Plant-Leaf-Disease-Prediction/Dataset/train', 
+                                                 target_size=(128, 128),
+                                                 batch_size=6, class_mode='categorical')
+
+valid_set = test_datagen.flow_from_directory('C:/Users/tejes/OneDrive/Desktop/Buddi/Plant-Leaf-Disease-Prediction/Dataset/val', 
+                                             target_size=(128, 128),
+                                             batch_size=3, class_mode='categorical')
+
+
 
 labels = (training_set.class_indices)
 print(labels)
 
 
-classifier.fit_generator(training_set,
-                         steps_per_epoch = 20,
-                         epochs = 50,
-                         validation_data=valid_set
+classifier.fit(
+    training_set,
+    steps_per_epoch=20,
+    epochs=50,
+    validation_data=valid_set
+)
 
-                         )
 
 classifier_json=classifier.to_json()
 with open("model1.json", "w") as json_file:
     json_file.write(classifier_json)
 # serialize weights to HDF5
-    classifier.save_weights("my_model_weights.h5")
-    classifier.save("model.h5")
+    classifier.save_weights("my_model_weights.weights.h5")
+
+    classifier.save("model.keras")
+
     print("Saved model to disk")
 
 '''
